@@ -3,6 +3,7 @@
 # This module will contain the 6 types of chess pieces as Classes
 # These classes will only dictate the movement of pieces and are not related to the game logic
 module Pieces
+  # Each pieces should have a @position as a [row, column]
   class Pawn
     # TDL: 1) standard move: 1 sq diagonally/straight forward
     #      2) initial move: able to move 2 sq forward
