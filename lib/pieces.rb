@@ -9,6 +9,10 @@ module Pieces
       @position = position
     end
 
+    def update_position(new_position)
+      @position = new_position
+    end
+
     private
 
     def possible_moves

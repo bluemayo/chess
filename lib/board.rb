@@ -36,4 +36,11 @@ class Board
                             King.new([row, column])
                           end
   end
+
+  def move(current_position, new_position)
+    piece = @board[current_position[0]][current_position[1]]
+    @board[current_position[0]][current_position[1]] = nil
+    @board[new_position[0]][new_position[1]] = piece
+    piece.update_position(new_position)
+  end
 end
