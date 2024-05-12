@@ -14,14 +14,19 @@ class Game
     @player1 = Player.new(:white)
     @player2 = Player.new(:black)
     @board = Board.new
-    @board.init_pieces
-    assign
+    init_pieces
   end
 
-  def assign
-    @board.instance_variable_get(:@board)[0].each { |piece| @player1.update_pieces(piece) }
-    @board.instance_variable_get(:@board)[1].each { |piece| @player1.update_pieces(piece) }
-    @board.instance_variable_get(:@board)[6].each { |piece| @player2.update_pieces(piece) }
-    @board.instance_variable_get(:@board)[7].each { |piece| @player2.update_pieces(piece) }
+  def init_pieces
+    8.times do |column|
+      create_pieces(column)
+    end
+  end
+
+  def create_pieces(column)
+    @player1.update_pieces(@board.create_pawn(1, column))
+    @player2.update_pieces(@board.create_pawn(6, column))
+    @player1.update_pieces(@board.create_non_pawn(0, column))
+    @player2.update_pieces(@board.create_non_pawn(7, column))
   end
 end

@@ -18,47 +18,22 @@ class Board
     @board = Array.new(8).map { Array.new(8) }
   end
 
-  def init_pieces
-    create_non_pawns(0)
-    create_pawns(1)
-    create_non_pawns(7)
-    create_pawns(6)
+  def create_pawn(row, column)
+    @board[row][column] = Pawn.new([row, column])
   end
 
-  def create_pawns(row)
-    (0..7).each do |column|
-      @board[row][column] = Pawn.new([row, column])
-    end
-  end
-
-  def create_non_pawns(row)
-    create_rook(row)
-    create_knight(row)
-    create_bishop(row)
-    create_queen(row)
-    create_king(row)
-  end
-
-  def create_rook(row)
-    @board[row][0] = Rook.new([row, 0])
-    @board[row][7] = Rook.new([row, 7])
-  end
-
-  def create_knight(row)
-    @board[row][1] = Knight.new([row, 1])
-    @board[row][6] = Knight.new([row, 6])
-  end
-
-  def create_bishop(row)
-    @board[row][2] = Bishop.new([row, 2])
-    @board[row][5] = Bishop.new([row, 5])
-  end
-
-  def create_queen(row)
-    @board[row][3] = Queen.new([row, 3])
-  end
-
-  def create_king(row)
-    @board[row][4] = King.new([row, 4])
+  def create_non_pawn(row, column) # rubocop: disable Metrics
+    @board[row][column] = case column
+                          when 0, 7
+                            Rook.new([row, column])
+                          when 1, 6
+                            Knight.new([row, column])
+                          when 2, 5
+                            Bishop.new([row, column])
+                          when 3
+                            Queen.new([row, column])
+                          when 4
+                            King.new([row, column])
+                          end
   end
 end
