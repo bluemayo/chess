@@ -5,9 +5,21 @@
 module Pieces
   # Each pieces should have a @position as a [y, x] inherited from class Piece
   class Piece
-    def initialize(position, color)
+    def initialize(position)
       @position = position
-      @color = color
+    end
+
+    private
+
+    def possible_moves
+      array = []
+      moves.each do |move|
+        new_position = [@position[0] + move[0], @position[1] + move[1]]
+        break if new_position.any? { |position| position.negative? || position > 7 }
+
+        array << new_position
+      end
+      array
     end
   end
 
@@ -19,9 +31,14 @@ module Pieces
     #      5) promotion
   end
 
+  # Defines the actions of a Knight
   class Knight < Piece
     # TDL: 1) standard move: L-shaped traversal
     #      2) able to leap past any pieces
+    MOVES = [[2, -1], [2, 1], [1, -2], [1, 2], [-1, -2], [-1, 2], [-2, -1], [-2, 1]].freeze
+    def moves
+      MOVES
+    end
   end
 
   class Bishop < Piece
