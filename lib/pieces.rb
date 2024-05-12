@@ -7,32 +7,41 @@ module Pieces
   class Piece
     def initialize(position)
       @position = position
+      @possible = possible_moves
     end
 
     def update_position(new_position)
       @position = new_position
+      @possible = possible_moves
     end
 
-    private
-
-    def possible_moves
-      array = []
-      moves.each do |move|
-        new_position = [@position[0] + move[0], @position[1] + move[1]]
-        break if new_position.any? { |position| position.negative? || position > 7 }
-
-        array << new_position
-      end
-      array
-    end
+    def possible_moves; end
   end
 
+  # Defines action of a pawn
   class Pawn < Piece
     # TDL: 1) standard move: 1 sq diagonally/straight forward
     #      2) initial move: able to move 2 sq forward
     #      3) only able to capture on diagonal moves
     #      4) en passant
     #      5) promotion
+    def intialize(position, color)
+      super position
+      @color = color
+      @start = true
+    end
+
+    def possible_moves
+      move = @color == white ? 1 : -1
+      array = []
+      (-1..1).each do |column|
+        new_column = @position[1] + column
+        break if new_column.nagative? || new_column > 7
+
+        array << [@position[0] + move, new_column]
+      end
+      array << [@position[0] + 2 * move] if @start
+    end
   end
 
   # Defines the actions of a Knight
@@ -40,8 +49,15 @@ module Pieces
     # TDL: 1) standard move: L-shaped traversal
     #      2) able to leap past any pieces
     MOVES = [[2, -1], [2, 1], [1, -2], [1, 2], [-1, -2], [-1, 2], [-2, -1], [-2, 1]].freeze
-    def moves
-      MOVES
+    def possible_moves
+      array = []
+      MOVES.each do |move|
+        new_position = [@position[0] + move[0], @position[1] + move[1]]
+        break if new_position.any? { |position| position.negative? || position > 7 }
+
+        array << new_position
+      end
+      array
     end
   end
 
