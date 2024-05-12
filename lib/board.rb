@@ -18,8 +18,8 @@ class Board
     @board = Array.new(8).map { Array.new(8) }
   end
 
-  def create_pawn(row, column)
-    @board[row][column] = Pawn.new([row, column])
+  def create_pawn(row, column, color)
+    @board[row][column] = Pawn.new([row, column], color)
   end
 
   def create_non_pawn(row, column) # rubocop: disable Metrics
@@ -37,10 +37,19 @@ class Board
                           end
   end
 
+  # Used to Move/Capture pieces
   def move(current_position, new_position)
-    piece = @board[current_position[0]][current_position[1]]
-    @board[current_position[0]][current_position[1]] = nil
-    @board[new_position[0]][new_position[1]] = piece
+    piece = access_board(current_position)
+    update_board(current_position)
+    update_board(new_position, piece)
     piece.update_position(new_position)
+  end
+
+  def update_board(position, piece = nil)
+    @board[position[0]][position[1]] = piece
+  end
+
+  def access_board(position)
+    @board[position[0]][position[1]]
   end
 end

@@ -23,9 +23,15 @@ class Game
     end
   end
 
+  def play
+    @board.move(@player1.choose_piece, @player1.move_to)
+  end
+
+  private
+
   def create_pieces(column)
-    @player1.update_pieces(@board.create_pawn(1, column))
-    @player2.update_pieces(@board.create_pawn(6, column))
+    @player1.update_pieces(@board.create_pawn(1, column, :white))
+    @player2.update_pieces(@board.create_pawn(6, column, :black))
     @player1.update_pieces(@board.create_non_pawn(0, column))
     @player2.update_pieces(@board.create_non_pawn(7, column))
   end
