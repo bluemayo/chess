@@ -16,6 +16,7 @@ class Board
   #      3) Method for updating a piece's position (communication with Pieces Module)
   def initialize
     @board = Array.new(8).map { Array.new(8) }
+    @selected = nil
   end
 
   def create_pawn(row, column, color)
@@ -43,6 +44,7 @@ class Board
     update_board(current_position)
     update_board(new_position, piece)
     piece.update_position(new_position)
+    piece.moved if piece.is_a?(Pieces::Pawn)
   end
 
   def update_board(position, piece = nil)
@@ -51,5 +53,13 @@ class Board
 
   def access_board(position)
     @board[position[0]][position[1]]
+  end
+
+  def select_piece(position)
+    @selected = access_board(position)
+  end
+
+  def possible
+    @selected.possible_moves
   end
 end

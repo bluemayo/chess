@@ -25,22 +25,24 @@ module Pieces
     #      3) only able to capture on diagonal moves
     #      4) en passant
     #      5) promotion
-    def intialize(position, color)
+    def initialize(position, color)
       super position
       @color = color
       @start = true
     end
 
     def possible_moves
-      move = @color == white ? 1 : -1
+      move = @color == :white ? 1 : -1
       array = []
       (-1..1).each do |column|
         new_column = @position[1] + column
-        break if new_column.nagative? || new_column > 7
-
-        array << [@position[0] + move, new_column]
+        array << [@position[0] + move, new_column] unless new_column.negative? || new_column > 7
       end
-      array << [@position[0] + 2 * move] if @start
+      array << [@position[0] + 2 * move, @position[1]] if @start
+    end
+
+    def moved
+      @start = false
     end
   end
 
@@ -82,3 +84,6 @@ module Pieces
     #      2) castling with Rook
   end
 end
+
+pawn = Pieces::Pawn.new([1, 0], :white)
+p pawn.possible_moves

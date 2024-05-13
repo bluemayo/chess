@@ -2,6 +2,7 @@
 
 require_relative 'board'
 require_relative 'player'
+require_relative 'display'
 
 # This class will define the flow of a chess game by calling methods from Board and Player classes
 class Game
@@ -34,5 +35,16 @@ class Game
     @player2.update_pieces(@board.create_pawn(6, column, :black))
     @player1.update_pieces(@board.create_non_pawn(0, column))
     @player2.update_pieces(@board.create_non_pawn(7, column))
+  end
+
+  def turn(player)
+    @board.select_piece(player.choose_piece)
+    @board.decide(verify_move(player.move_to))
+  end
+
+  def verify_move(move)
+    move if @board.possible.include?(move)
+
+    display_invalid
   end
 end
