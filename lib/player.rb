@@ -27,7 +27,7 @@ class Player
   def to_row_and_column(file_and_rank)
     array = file_and_rank.split('').reverse
     array[0] = array[0].to_i - 1
-    array[1] = array[1].ord - 'a'.ord
+    array[1] = array[1].downcase.ord - 'a'.ord
     array
   end
 end

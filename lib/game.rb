@@ -11,6 +11,8 @@ class Game
   #                    b) Loop through several methods to simulate players taking turns
   #                    c) Terminate loop once game has ended by winning or drawing
   #                    d) Serialize to save game
+  include Display
+
   def initialize
     @player1 = Player.new(:white)
     @player2 = Player.new(:black)
@@ -25,7 +27,7 @@ class Game
   end
 
   def play
-    @board.move(@player1.choose_piece, @player1.move_to)
+    turn(@player1)
   end
 
   private
@@ -39,12 +41,14 @@ class Game
 
   def turn(player)
     @board.select_piece(player.choose_piece)
-    @board.decide(verify_move(player.move_to))
+    @board.move(verify_move(player))
   end
 
-  def verify_move(move)
-    move if @board.possible.include?(move)
+  def verify_move(player)
+    move = player.move_to
+    return move if @board.possible.include?(move)
 
     display_invalid
+    verify_move(player.move_to)
   end
 end

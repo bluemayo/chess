@@ -38,13 +38,13 @@ class Board
                           end
   end
 
-  # Used to Move/Capture pieces
-  def move(current_position, new_position)
-    piece = access_board(current_position)
-    update_board(current_position)
-    update_board(new_position, piece)
-    piece.update_position(new_position)
-    piece.moved if piece.is_a?(Pieces::Pawn)
+  # Used to Move the selected piece
+  def move(new_position)
+    update_board(@selected.instance_variable_get(:@position))
+    update_board(new_position, @selected)
+    @selected.update_position(new_position)
+    @selected.moved if @selected.is_a?(Pieces::Pawn)
+    puts "#{@selected} moved!"
   end
 
   def update_board(position, piece = nil)
@@ -57,6 +57,7 @@ class Board
 
   def select_piece(position)
     @selected = access_board(position)
+    puts "#{@selected} selected!"
   end
 
   def possible
