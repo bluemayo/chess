@@ -31,9 +31,10 @@ module Pieces
       array = []
       (-1..1).each do |column|
         new_column = @position[1] + column
-        array << [@position[0] + @direction, new_column] unless new_column.negative? || new_column > 7
+        array << [@position[0] + @direction, new_column] unless new_column < 1 || new_column > 8
       end
       array << [@position[0] + 2 * @direction, @position[1]] if @start
+      array
     end
 
     def moved
@@ -50,9 +51,7 @@ module Pieces
       array = []
       MOVES.each do |move|
         new_position = [@position[0] + move[0], @position[1] + move[1]]
-        break if new_position.any? { |position| position.negative? || position > 7 }
-
-        array << new_position
+        array << new_position unless new_position.any? { |position| position < 1 || position > 8 }
       end
       array
     end

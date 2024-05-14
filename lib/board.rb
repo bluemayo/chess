@@ -15,7 +15,7 @@ class Board
   #                     f) Serializing
   #      3) Method for updating a piece's position (communication with Pieces Module)
   def initialize
-    @board = Array.new(8).map { Array.new(8) }
+    @board = Array.new(9).map { Array.new(9) }
     @selected = nil
     @possible = nil
   end
@@ -28,15 +28,15 @@ class Board
   # Populate non_pawns
   def create_non_pawn(row, column) # rubocop: disable Metrics
     @board[row][column] = case column
-                          when 0, 7
+                          when 1, 8
                             Rook.new([row, column])
-                          when 1, 6
+                          when 2, 7
                             Knight.new([row, column])
-                          when 2, 5
+                          when 3, 6
                             Bishop.new([row, column])
-                          when 3
-                            Queen.new([row, column])
                           when 4
+                            Queen.new([row, column])
+                          when 5
                             King.new([row, column])
                           end
   end
@@ -47,7 +47,7 @@ class Board
     update_board(new_position, @selected)
     @selected.update_position(new_position)
     @selected.moved if @selected.is_a?(Pieces::Pawn)
-    puts "#{@selected} moved!"
+    puts "#{@selected} moved! to #{new_position}"
   end
 
   def update_board(position, piece = nil)
@@ -55,7 +55,7 @@ class Board
   end
 
   def access_board(position)
-    position.each { |each| return nil if each.negative? || each > 7 }
+    position.each { |each| return nil if each < 1 || each > 8 }
     @board[position[0]][position[1]]
   end
 
