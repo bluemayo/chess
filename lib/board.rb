@@ -17,12 +17,15 @@ class Board
   def initialize
     @board = Array.new(8).map { Array.new(8) }
     @selected = nil
+    @possible = nil
   end
 
-  def create_pawn(row, column, color)
-    @board[row][column] = Pawn.new([row, column], color)
+  # Populate a row of pawns
+  def create_pawn(row, column, direction)
+    @board[row][column] = Pawn.new([row, column], direction)
   end
 
+  # Populate non_pawns
   def create_non_pawn(row, column) # rubocop: disable Metrics
     @board[row][column] = case column
                           when 0, 7
@@ -52,15 +55,43 @@ class Board
   end
 
   def access_board(position)
+    position.each { |each| return nil if each.negative? || each > 7 }
     @board[position[0]][position[1]]
   end
 
+  # To change selected piece
   def select_piece(position)
     @selected = access_board(position)
-    puts "#{@selected} selected!"
+    update_possible
+    puts "#{@selected} at #{position} selected!"
   end
 
-  def possible
-    @selected.possible_moves
+  # To call the possible function according to class, updating @possible with the return value
+  def update_possible
+    @possible = case @selected
+                in Pieces::Pawn then pawn_possible
+                in Pieces::Knight then knight_possible
+                in Pieces::Bishop then bishop_possible
+                in Pieces::Rook then rook_possible
+                in Pieces::Queen then queen_possible
+                in Pieces::King then king_possible
+                end
   end
+
+  private
+
+  def pawn_possible
+    possible = @selected.possible_moves
+    possible.each do |move|
+      possible.delete(move) unless access_board(move).nil?
+    end
+    p possible
+    possible
+  end
+
+  def knight_possible; end
+  def bishop_possible; end
+  def rook_possible; end
+  def queen_possible; end
+  def king_possible; end
 end

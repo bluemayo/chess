@@ -28,13 +28,14 @@ class Game
 
   def play
     turn(@player1)
+    turn(@player2)
   end
 
   private
 
   def create_pieces(column)
-    @player1.update_pieces(@board.create_pawn(1, column, :white))
-    @player2.update_pieces(@board.create_pawn(6, column, :black))
+    @player1.update_pieces(@board.create_pawn(1, column, 1))
+    @player2.update_pieces(@board.create_pawn(6, column, -1))
     @player1.update_pieces(@board.create_non_pawn(0, column))
     @player2.update_pieces(@board.create_non_pawn(7, column))
   end
@@ -46,9 +47,9 @@ class Game
 
   def verify_move(player)
     move = player.move_to
-    return move if @board.possible.include?(move)
+    return move if @board.instance_variable_get(:@possible).include?(move)
 
     display_invalid
-    verify_move(player.move_to)
+    verify_move(player)
   end
 end

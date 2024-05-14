@@ -7,15 +7,11 @@ module Pieces
   class Piece
     def initialize(position)
       @position = position
-      @possible = possible_moves
     end
 
     def update_position(new_position)
       @position = new_position
-      @possible = possible_moves
     end
-
-    def possible_moves; end
   end
 
   # Defines action of a pawn
@@ -25,20 +21,19 @@ module Pieces
     #      3) only able to capture on diagonal moves
     #      4) en passant
     #      5) promotion
-    def initialize(position, color)
+    def initialize(position, direction)
       super position
-      @color = color
+      @direction = direction
       @start = true
     end
 
     def possible_moves
-      move = @color == :white ? 1 : -1
       array = []
       (-1..1).each do |column|
         new_column = @position[1] + column
-        array << [@position[0] + move, new_column] unless new_column.negative? || new_column > 7
+        array << [@position[0] + @direction, new_column] unless new_column.negative? || new_column > 7
       end
-      array << [@position[0] + 2 * move, @position[1]] if @start
+      array << [@position[0] + 2 * @direction, @position[1]] if @start
     end
 
     def moved
@@ -84,6 +79,3 @@ module Pieces
     #      2) castling with Rook
   end
 end
-
-pawn = Pieces::Pawn.new([1, 0], :white)
-p pawn.possible_moves
