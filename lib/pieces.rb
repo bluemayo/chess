@@ -5,12 +5,24 @@
 module Pieces
   # Each pieces should have a @position as a [y, x] inherited from class Piece
   class Piece
+    attr_reader :position, :player
+
     def initialize(position)
       @position = position
+      @player = calc_player
     end
 
     def update_position(new_position)
       @position = new_position
+    end
+
+    def calc_player
+      case @position[0]
+      when 1, 2
+        1
+      when 7, 8
+        2
+      end
     end
   end
 

@@ -16,6 +16,11 @@ class Player
     @pieces << piece
   end
 
+  def delete_piece(piece)
+    p piece
+    @pieces.delete(piece) unless piece.nil?
+  end
+
   def choose_piece
     print 'Select Piece: '
     move = check_move
@@ -37,7 +42,7 @@ class Player
     return move if in_range?(move)
 
     display_invalid
-    check_move
+    move_to
   end
 
   def to_row_and_column(file_and_rank)

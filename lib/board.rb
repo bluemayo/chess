@@ -43,18 +43,22 @@ class Board
 
   # Used to Move the selected piece
   def move(new_position)
-    update_board(@selected.instance_variable_get(:@position))
-    update_board(new_position, @selected)
+    update_board(@selected.position)
+    deleted_piece = update_board(new_position, @selected)
     @selected.update_position(new_position)
     @selected.moved if @selected.is_a?(Pieces::Pawn)
     puts "#{@selected} moved! to #{new_position}"
+    deleted_piece
   end
 
   def update_board(position, piece = nil)
+    deleted_piece = @board[position[0]][position[1]]
     @board[position[0]][position[1]] = piece
+    deleted_piece
   end
 
   def access_board(position)
+    # Remove the guard clause if not required as all input will be checked in Player class
     position.each { |each| return nil if each < 1 || each > 8 }
     @board[position[0]][position[1]]
   end
@@ -81,12 +85,14 @@ class Board
   private
 
   def pawn_possible
-    possible = @selected.possible_moves
-    possible.each do |move|
-      possible.delete(move) unless access_board(move).nil?
+    array = []
+    @selected.possible_moves.each do |move|
+      piece = access_board(move)
+      array << move if piece.nil?
+      array << move if piece.player != @selected.player && piece.position[1] != @selected.position[1]
     end
-    p possible
-    possible
+    p array
+    array
   end
 
   def knight_possible; end
