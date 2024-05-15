@@ -41,7 +41,7 @@ class Board
                           end
   end
 
-  # Used to Move the selected piece
+  # Used to Move/Capture with the selected piece
   def move(new_position)
     update_board(@selected.position)
     deleted_piece = update_board(new_position, @selected)
@@ -88,14 +88,30 @@ class Board
     array = []
     @selected.possible_moves.each do |move|
       piece = access_board(move)
-      array << move if piece.nil?
-      array << move if piece.player != @selected.player && piece.position[1] != @selected.position[1]
+      if piece.nil?
+        array << move
+      elsif piece.player != @selected.player && piece.position[1] != @selected.position[1]
+        array << move
+      end
     end
     p array
     array
   end
 
-  def knight_possible; end
+  def knight_possible
+    array = []
+    @selected.possible_moves.each do |move|
+      piece = access_board(move)
+      if piece.nil?
+        array << move
+      elsif piece.player != @selected.player
+        array << move
+      end
+    end
+    p array
+    array
+  end
+
   def bishop_possible; end
   def rook_possible; end
   def queen_possible; end

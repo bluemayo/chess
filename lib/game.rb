@@ -34,7 +34,7 @@ class Game
   private
 
   def create_pieces(column)
-    @player1.update_pieces(@board.create_pawn(6, 4, 1))
+    @player1.update_pieces(@board.create_non_pawn(6, 2))
     @player1.update_pieces(@board.create_pawn(2, column, 1))
     @player2.update_pieces(@board.create_pawn(7, column, -1))
     @player1.update_pieces(@board.create_non_pawn(1, column))
