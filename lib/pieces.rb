@@ -22,6 +22,8 @@ module Pieces
         1
       when 7, 8
         2
+      else
+        1
       end
     end
   end
@@ -71,19 +73,27 @@ module Pieces
       end
       array
     end
+
     def to_s
       "\u2658".encode('UTF-8')
     end
   end
 
+  # Defines the actions of a Bishop
   class Bishop < Piece
     # TDL: 1) standard move: any number of sqs diagonally
     #      2) unable to move past pieces
     def to_s
       "\u2657".encode('UTF-8')
     end
+
+    def possible_moves
+      # Returns a direction array
+      [[1, 1], [1, -1], [-1, -1], [-1, 1]]
+    end
   end
 
+  # Defines the actions of a Rook
   class Rook < Piece
     # TDL: 1) standard move: any number of sqs updown leftright
     #      2) unable to move past pieces
@@ -93,6 +103,7 @@ module Pieces
     end
   end
 
+  # Defines the actions of a Queen
   class Queen < Piece
     # TDL: 1) standard move: any number of sqs updown leftright and diagonally
     #      2) unable to move past pieces
@@ -101,6 +112,7 @@ module Pieces
     end
   end
 
+  # Defines the actions of a King
   class King < Piece
     # TDL: 1) standard move: 1 sq in any direction
     #      2) castling with Rook

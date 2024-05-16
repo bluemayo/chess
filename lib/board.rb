@@ -94,7 +94,6 @@ class Board
         array << move
       end
     end
-    p array
     array
   end
 
@@ -108,12 +107,34 @@ class Board
         array << move
       end
     end
+    array
+  end
+
+  def bishop_possible
+    array = []
+    @selected.possible_moves.each do |direction|
+      direction_array = check_direction(direction, @selected.position)
+      array.concat(direction_array) unless direction_array.nil?
+    end
     p array
     array
   end
 
-  def bishop_possible; end
   def rook_possible; end
   def queen_possible; end
   def king_possible; end
+
+  def check_direction(direction, position, array = [])
+    new_position = [position[0] + direction[0], position[1] + direction[1]]
+    return array if new_position.any? { |each| return nil if each < 1 || each > 8 }
+
+    piece = access_board(new_position)
+    if piece.nil?
+      array << new_position
+      check_direction(direction, new_position, array)
+    elsif piece.player != @selected.player
+      array << new_position
+    end
+    array
+  end
 end
