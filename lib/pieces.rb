@@ -101,6 +101,11 @@ module Pieces
     def to_s
       "\u2656".encode('UTF-8')
     end
+
+    def possible_moves
+      # Returns a direction array
+      [[1, 0], [-1, 0], [0, 1], [0, -1]]
+    end
   end
 
   # Defines the actions of a Queen
@@ -109,6 +114,10 @@ module Pieces
     #      2) unable to move past pieces
     def to_s
       "\u2655".encode('UTF-8')
+    end
+
+    def possible_moves
+      [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, -1], [-1, 1]]
     end
   end
 

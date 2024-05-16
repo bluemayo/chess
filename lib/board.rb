@@ -75,9 +75,9 @@ class Board
     @possible = case @selected
                 in Pieces::Pawn then pawn_possible
                 in Pieces::Knight then knight_possible
-                in Pieces::Bishop then bishop_possible
-                in Pieces::Rook then rook_possible
-                in Pieces::Queen then queen_possible
+                in Pieces::Bishop then rbq_possible
+                in Pieces::Rook then rbq_possible
+                in Pieces::Queen then rbq_possible
                 in Pieces::King then king_possible
                 end
   end
@@ -110,7 +110,7 @@ class Board
     array
   end
 
-  def bishop_possible
+  def rbq_possible
     array = []
     @selected.possible_moves.each do |direction|
       direction_array = check_direction(direction, @selected.position)
@@ -120,8 +120,6 @@ class Board
     array
   end
 
-  def rook_possible; end
-  def queen_possible; end
   def king_possible; end
 
   def check_direction(direction, position, array = [])
