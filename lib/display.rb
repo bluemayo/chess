@@ -27,4 +27,16 @@ module Display
     print piece
     print ' ' if piece.nil?
   end
+
+  def display_possible(possible)
+    print 'Possible moves with selected piece: '
+    possible.each do |move|
+      row = move[0].to_s
+      column = move[1] - 1 + 'a'.ord
+      print ' | '
+      print column.chr + row
+    end
+    print ' |'
+    puts ''
+  end
 end
