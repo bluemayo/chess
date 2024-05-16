@@ -17,7 +17,6 @@ class Player
   end
 
   def delete_piece(piece)
-    p piece
     @pieces.delete(piece) unless piece.nil?
   end
 

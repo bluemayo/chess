@@ -128,5 +128,14 @@ module Pieces
     def to_s
       "\u2654".encode('UTF-8')
     end
+
+    def possible_moves
+      array = []
+      [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, -1], [-1, 1]].each do |move|
+        new_position = [@position[0] + move[0], @position[1] + move[1]]
+        array << new_position unless new_position.any? { |position| position < 1 || position > 8 }
+      end
+      array
+    end
   end
 end

@@ -67,18 +67,18 @@ class Board
   def select_piece(position)
     @selected = access_board(position)
     update_possible
-    puts "#{@selected} at #{position} selected!"
+    puts "#{@selected} at #{position} selected!" # Remove the position after, it is for testing
   end
 
   # To call the possible function according to class, updating @possible with the return value
   def update_possible
     @possible = case @selected
                 in Pieces::Pawn then pawn_possible
-                in Pieces::Knight then knight_possible
+                in Pieces::Knight then kk_possible
                 in Pieces::Bishop then rbq_possible
                 in Pieces::Rook then rbq_possible
                 in Pieces::Queen then rbq_possible
-                in Pieces::King then king_possible
+                in Pieces::King then kk_possible
                 end
   end
 
@@ -97,7 +97,7 @@ class Board
     array
   end
 
-  def knight_possible
+  def kk_possible
     array = []
     @selected.possible_moves.each do |move|
       piece = access_board(move)
@@ -116,11 +116,8 @@ class Board
       direction_array = check_direction(direction, @selected.position)
       array.concat(direction_array) unless direction_array.nil?
     end
-    p array
     array
   end
-
-  def king_possible; end
 
   def check_direction(direction, position, array = [])
     new_position = [position[0] + direction[0], position[1] + direction[1]]

@@ -37,7 +37,7 @@ class Game
   private
 
   def create_pieces(column)
-    @player1.update_pieces(@board.create_non_pawn(6, 3))
+    @player1.update_pieces(@board.create_non_pawn(6, 5)) # For testing
     @player1.update_pieces(@board.create_pawn(2, column, 1))
     @player2.update_pieces(@board.create_pawn(7, column, -1))
     @player1.update_pieces(@board.create_non_pawn(1, column))
@@ -46,6 +46,7 @@ class Game
 
   def turn(player, opponent)
     @board.select_piece(player.choose_piece)
+    display_possible(@board.instance_variable_get(:@possible))
     opponent.delete_piece(@board.move(verify_move(player)))
   end
 
