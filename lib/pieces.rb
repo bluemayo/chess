@@ -39,6 +39,10 @@ module Pieces
       @start = true
     end
 
+    def to_s
+      "\u2659".encode('UTF-8')
+    end
+
     def possible_moves
       array = []
       (-1..1).each do |column|
@@ -67,26 +71,41 @@ module Pieces
       end
       array
     end
+    def to_s
+      "\u2658".encode('UTF-8')
+    end
   end
 
   class Bishop < Piece
     # TDL: 1) standard move: any number of sqs diagonally
     #      2) unable to move past pieces
+    def to_s
+      "\u2657".encode('UTF-8')
+    end
   end
 
   class Rook < Piece
     # TDL: 1) standard move: any number of sqs updown leftright
     #      2) unable to move past pieces
     #      3) castling with King
+    def to_s
+      "\u2656".encode('UTF-8')
+    end
   end
 
   class Queen < Piece
     # TDL: 1) standard move: any number of sqs updown leftright and diagonally
     #      2) unable to move past pieces
+    def to_s
+      "\u2655".encode('UTF-8')
+    end
   end
 
   class King < Piece
     # TDL: 1) standard move: 1 sq in any direction
     #      2) castling with Rook
+    def to_s
+      "\u2654".encode('UTF-8')
+    end
   end
 end

@@ -27,8 +27,11 @@ class Game
   end
 
   def play
+    display_board(@board.instance_variable_get(:@board))
     turn(@player1, @player2)
+    display_board(@board.instance_variable_get(:@board))
     turn(@player2, @player1)
+    display_board(@board.instance_variable_get(:@board))
   end
 
   private
