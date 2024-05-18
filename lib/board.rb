@@ -4,7 +4,7 @@ require_relative 'pieces'
 
 # This class will define the board of a chess game as a 2D array containing pieces as objects
 # Class will also contain game logics involving the board such as check
-class Board
+class Board # rubocop: disable Metrics/ClassLength
   include Pieces
   # TDL: 1) @board should be an 8x8 2D array with top 2 and bottom 2 rows occupied when initialized
   #      2) Methods for a) Capturing
@@ -14,6 +14,8 @@ class Board
   #                     e) Draws like Stalement, Dead position, Threefold repetition, fifty-move rule
   #                     f) Serializing
   #      3) Method for updating a piece's position (communication with Pieces Module)
+  attr_reader :possible
+
   def initialize
     @board = Array.new(9).map { Array.new(9) }
     @selected = nil
@@ -47,6 +49,7 @@ class Board
     deleted_piece = update_board(new_position, @selected)
     @selected.update_position(new_position)
     @selected.moved if @selected.is_a?(Pieces::Pawn)
+    update_possible
     puts "#{@selected} moved! to #{new_position}"
     deleted_piece
   end
@@ -74,11 +77,8 @@ class Board
   def update_possible
     @possible = case @selected
                 in Pieces::Pawn then pawn_possible
-                in Pieces::Knight then kk_possible
-                in Pieces::Bishop then rbq_possible
-                in Pieces::Rook then rbq_possible
-                in Pieces::Queen then rbq_possible
-                in Pieces::King then kk_possible
+                in Pieces::Knight, Pieces::King then kk_possible
+                in Pieces::Bishop, Pieces::Queen, Pieces::Rook then rbq_possible
                 end
   end
 
