@@ -15,6 +15,7 @@ class Game
     @player1 = Player.new(:white)
     @player2 = Player.new(:black)
     @board = Board.new
+    board.populate_board
     @current_player = @player1
   end
 
@@ -24,18 +25,21 @@ class Game
 
   def play
     game_loop until game_won?
+    swap_player!
+    puts "#{current_player.color} Won!"
   end
 
-  def game_loop
-    display_board(board.board)
+  def game_loop # rubocop: disable Metrics/AbcSize
+    display_board(board.instance_variable_get(:@board))
     puts "#{current_player.color}'s turn"
-    board.select_piece(player_select)
-    board.move(player_move)
+    puts "#{current_player.color} is in check." if board.in_check?(current_player.color)
+    current_position = player_select
+    board.move(current_position, player_move(current_position))
     swap_player!
   end
 
   def game_won?
-    false
+    board.checkmate?(current_player.color)
   end
 
   def player_select
@@ -48,16 +52,16 @@ class Game
     position
   end
 
-  def player_move
-    position = nil
+  def player_move(current_position)
+    new_position = nil
     loop do
       print 'Move to: '
-      position = current_player.choose_position
-      break if board.selected.possible_moves.include?(position)
+      new_position = current_player.choose_position
+      break if board[current_position].valid_moves.include?(new_position)
 
       puts 'new position not in possible moves'
     end
-    position
+    new_position
   end
 
   def valid_select?(piece)
@@ -65,7 +69,7 @@ class Game
       display_no_piece
     elsif piece.color != current_player.color
       display_not_owned
-    elsif piece.possible_moves.empty?
+    elsif piece.valid_moves.empty?
       display_no_moves
     else
       return true

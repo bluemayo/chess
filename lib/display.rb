@@ -6,26 +6,36 @@ module Display
     puts 'Selected piece has no available moves!'
   end
 
+  def display_no_piece
+    puts 'There are no pieces there!'
+  end
+
   def display_not_owned
     puts 'Thats not your piece!'
   end
 
-  def display_board(board)
-    puts '+---+---+---+---+---+---+---+---+'
+  def display_board(board) # rubocop: disable Metrics/MethodLength
+    puts '    +---+---+---+---+---+---+---+---+'
     (1..8).each do |row|
-      print '| '
-      (1..8).each do |column|
-        display_piece(board[9 - row][column])
+      print '  '
+      (0..8).each do |column|
+        display_piece(board, 9 - row, column)
         print ' | '
       end
       print "\n"
-      puts '+---+---+---+---+---+---+---+---+'
+      puts '    +---+---+---+---+---+---+---+---+'
     end
+    puts '      a   b   c   d   e   f   g   h  '
   end
 
-  def display_piece(piece)
+  def display_piece(board, row, column)
+    piece = board[row][column]
     print piece
-    print ' ' if piece.nil?
+    if column.zero?
+      print row
+    elsif piece.nil?
+      print ' '
+    end
   end
 
   def display_possible(possible)

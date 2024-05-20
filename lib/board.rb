@@ -1,20 +1,16 @@
 # frozen_string_literal: true
 
 require_relative 'pieces'
-require_relative 'display'
 
 # This class will define the board of a chess game as a 2D array containing pieces as objects
 # Class will also contain game logics involving the board such as check
 class Board
   include Pieces
-  include Display
 
   attr_reader :selected
 
   def initialize
     @board = Array.new(9).map { Array.new(9) }
-    @selected = nil
-    populate_board
   end
 
   def []=(position, piece)
@@ -52,15 +48,11 @@ class Board
   end
 
   # Used to Move/Capture with the selected piece
-  def move(new_position)
-    self[selected.location] = nil
-    self[new_position] = selected
-    selected.update_location(new_position)
-  end
-
-  def select_piece(position)
-    @selected = self[position]
-    puts "#{selected} selected!"
+  def move(current_position, new_position)
+    piece = self[current_position]
+    self[current_position] = nil
+    self[new_position] = piece
+    piece.update_location(new_position)
   end
 
   def in_check?(color)
@@ -72,8 +64,25 @@ class Board
     false
   end
 
+  def checkmate?(color)
+    return false unless in_check?(color)
+
+    all_pieces = pieces.select { |piece| piece.color == color }
+    all_pieces.all? { |piece| piece.valid_moves.empty? }
+  end
+
   # Returns all pieces
   def pieces
     @board.flatten.reject(&:nil?)
+  end
+
+  # Creates a duplicate board with diff instances
+  def dup
+    new_board = Board.new
+    pieces.each do |piece|
+      new_piece = piece.class.new(piece.location, piece.color, new_board)
+      new_board[new_piece.location] = new_piece
+    end
+    new_board
   end
 end

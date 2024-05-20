@@ -15,6 +15,16 @@ module Pieces
       @board = board
     end
 
+    def valid_moves
+      moves = []
+      possible_moves.each do |move|
+        new_board = board.dup
+        new_board.move(location, move)
+        moves << move unless new_board.in_check?(color)
+      end
+      moves
+    end
+
     def enemy?(position)
       return false unless inbounds?(position)
 
@@ -63,7 +73,7 @@ module Pieces
       color == :white ? "\u2659".encode('UTF-8') : "\u265F".encode('UTF-8')
     end
 
-    def possible_moves(array = []) # rubocop: disable Metrics/AbcSize
+    def possible_moves(array = []) # rubocop: disable Metrics/AbcSize, Metrics/MethodLength
       (-1..1).each do |column|
         new_position = [location[0] + direction, location[1] + column]
         if empty?(new_position)
@@ -72,7 +82,8 @@ module Pieces
           array << new_position unless new_position[1] == location[1]
         end
       end
-      array << [location[0] + 2 * direction, location[1]] if @start
+      new_position = [location[0] + 2 * direction, location[1]]
+      array << new_position if @start && empty?(new_position)
       array
     end
 
