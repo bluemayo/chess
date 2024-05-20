@@ -19,12 +19,16 @@ class Player
   private
 
   def check_position(file_and_rank)
+    return 'save' if file_and_rank.downcase == 'save'
+
     return [0, 0] unless file_and_rank.length == 2
 
     file_and_rank.split('').reverse
   end
 
   def to_row_and_column(array)
+    return 'save' if array == 'save'
+
     array[0] = array[0].to_i
     return [0, 0] unless in_range?(array[0])
 
