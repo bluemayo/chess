@@ -9,7 +9,7 @@ class Board
   include Pieces
   include Display
 
-  attr_reader :board, :selected
+  attr_reader :selected
 
   def initialize
     @board = Array.new(9).map { Array.new(9) }
@@ -61,5 +61,19 @@ class Board
   def select_piece(position)
     @selected = self[position]
     puts "#{selected} selected!"
+  end
+
+  def in_check?(color)
+    king_position = pieces.select { |piece| piece.color == color && piece.is_a?(Pieces::King) }[0].location
+
+    pieces.reject { |piece| piece.color == color }.each do |piece|
+      return true if piece.possible_moves.include?(king_position)
+    end
+    false
+  end
+
+  # Returns all pieces
+  def pieces
+    @board.flatten.reject(&:nil?)
   end
 end
