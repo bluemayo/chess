@@ -1,60 +1,75 @@
 # frozen_string_literal: true
 
+require_relative 'display'
 require_relative 'board'
 require_relative 'player'
-require_relative 'display'
 
-# This class will define the flow of a chess game by calling methods from Board and Player classes
+# Defines game logics
 class Game
-  # Initializing this class should start a new game by initializing other classes
-  # TDL: 1) Methods to a) Start game
-  #                    b) Loop through several methods to simulate players taking turns
-  #                    c) Terminate loop once game has ended by winning or drawing
-  #                    d) Serialize to save game
+  attr_reader :player1, :player2, :board
+  attr_accessor :current_player
+
   include Display
 
   def initialize
     @player1 = Player.new(:white)
     @player2 = Player.new(:black)
     @board = Board.new
-    init_pieces
+    @current_player = @player1
   end
 
-  def init_pieces
-    (1..8).each do |column|
-      create_pieces(column)
-    end
+  def swap_player!
+    self.current_player = current_player == player1 ? player2 : player1
   end
 
   def play
-    display_board(@board.instance_variable_get(:@board))
-    turn(@player1, @player2)
-    display_board(@board.instance_variable_get(:@board))
-    turn(@player2, @player1)
-    display_board(@board.instance_variable_get(:@board))
+    game_loop until game_won?
   end
 
-  private
-
-  def create_pieces(column)
-    @player1.update_pieces(@board.create_non_pawn(6, 5)) # For testing
-    @player1.update_pieces(@board.create_pawn(2, column, 1))
-    @player2.update_pieces(@board.create_pawn(7, column, -1))
-    @player1.update_pieces(@board.create_non_pawn(1, column))
-    @player2.update_pieces(@board.create_non_pawn(8, column))
+  def game_loop
+    display_board(board.board)
+    puts "#{current_player.color}'s turn"
+    board.select_piece(player_select)
+    board.move(player_move)
+    swap_player!
   end
 
-  def turn(player, opponent)
-    @board.select_piece(player.choose_piece)
-    display_possible(@board.instance_variable_get(:@possible))
-    opponent.delete_piece(@board.move(verify_move(player)))
+  def game_won?
+    false
   end
 
-  def verify_move(player)
-    move = player.move_to
-    return move if @board.instance_variable_get(:@possible).include?(move)
+  def player_select
+    position = nil
+    loop do
+      print 'Select Piece: '
+      position = current_player.choose_position
+      break if valid_select?(board[position])
+    end
+    position
+  end
 
-    display_invalid
-    verify_move(player)
+  def player_move
+    position = nil
+    loop do
+      print 'Move to: '
+      position = current_player.choose_position
+      break if board.selected.possible_moves.include?(position)
+
+      puts 'new position not in possible moves'
+    end
+    position
+  end
+
+  def valid_select?(piece)
+    if piece.nil?
+      display_no_piece
+    elsif piece.color != current_player.color
+      display_not_owned
+    elsif piece.possible_moves.empty?
+      display_no_moves
+    else
+      return true
+    end
+    false
   end
 end

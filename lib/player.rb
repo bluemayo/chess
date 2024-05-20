@@ -6,55 +6,37 @@ require_relative 'display'
 class Player
   include Display
 
-  def initialize(name)
-    @name = name
-    @pieces = []
-    @selected = nil
+  attr_reader :color
+
+  def initialize(color)
+    @color = color
   end
 
-  def update_pieces(piece)
-    @pieces << piece
-  end
-
-  def delete_piece(piece)
-    @pieces.delete(piece) unless piece.nil?
-  end
-
-  def choose_piece
-    print 'Select Piece: '
-    move = check_move
-    return move if owned?(move)
-
-    display_not_owned
-    choose_piece
-  end
-
-  def move_to
-    print 'Move to: '
-    check_move
+  def choose_position
+    to_row_and_column(check_position(gets.chomp))
   end
 
   private
 
-  def check_move
-    move = to_row_and_column(gets.chomp)
-    return move if in_range?(move)
-
-    display_invalid
-    move_to
-  end
-
-  def to_row_and_column(file_and_rank)
+  def check_position(file_and_rank)
     return [0, 0] unless file_and_rank.length == 2
 
-    array = file_and_rank.split('').reverse
+    file_and_rank.split('').reverse
+  end
+
+  def to_row_and_column(array)
     array[0] = array[0].to_i
+    return [0, 0] unless in_range?(array[0])
+
     array[1] = array[1].downcase.ord - 'a'.ord + 1
+    return [0, 0] unless in_range?(array[1])
+
     array
   end
 
   def in_range?(position)
-    position.each { |each| return false if each < 1 || each > 8 }
+    return false if position < 1 || position > 8
+
     true
   end
 

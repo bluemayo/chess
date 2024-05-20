@@ -2,8 +2,8 @@
 
 # This Module will contain methods to display needed messages to the terminal
 module Display
-  def display_invalid
-    puts 'Invalid Move!'
+  def display_no_moves
+    puts 'Selected piece has no available moves!'
   end
 
   def display_not_owned
